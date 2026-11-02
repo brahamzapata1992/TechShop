@@ -1,0 +1,4 @@
+import { getOrdersByUser } from '../services/orderService'
+import { useAuth } from '../context/AuthContext'
+import { formatCurrency } from '../utils/format'
+export default function ProfilePage(){const {user}=useAuth();const orders=getOrdersByUser(user.id);return <section className="container section"><div className="profile-grid"><aside className="profile-card"><div className="avatar">{user.name[0]}</div><h2>{user.name} {user.lastName}</h2><p>{user.email}</p><span className="badge">{user.role==='admin'?'Administrador':'Cliente'}</span></aside><div><div className="page-title"><h1>Mis pedidos</h1></div>{orders.length?orders.map(o=><article className="order-card" key={o.id}><div><strong>{o.id}</strong><p>{new Date(o.createdAt).toLocaleDateString('es-CO')}</p></div><span className="status">{o.status}</span><strong>{formatCurrency(o.total)}</strong></article>):<div className="empty">Todavía no tienes pedidos.</div>}</div></div></section>}

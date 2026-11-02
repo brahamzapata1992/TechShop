@@ -1,0 +1,8 @@
+import { useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import { Check, ShoppingCart, Star } from 'lucide-react'
+import QuantityControl from '../components/QuantityControl'
+import { useProducts } from '../context/ProductContext'
+import { useCart } from '../context/CartContext'
+import { formatCurrency } from '../utils/format'
+export default function ProductDetailPage() { const {id}=useParams(); const nav=useNavigate(); const {products}=useProducts(); const {addToCart}=useCart(); const product=products.find(p=>p.id===id); const [qty,setQty]=useState(1); if(!product)return <div className="container section empty">Producto no encontrado.</div>; const buy=()=>{addToCart(product,qty);nav('/carrito')}; return <section className="container section"><div className="detail-card"><div className="detail-image"><span>{product.emoji}</span></div><div><p className="eyebrow">{product.category} · {product.brand}</p><h1>{product.name}</h1><div className="rating big"><Star fill="currentColor"/> {product.rating}</div><div className="detail-price">{formatCurrency(product.price)} {product.oldPrice&&<del>{formatCurrency(product.oldPrice)}</del>}</div><p className="stock">Stock disponible: {product.stock} unidades</p><p>{product.description}</p><h3>Características</h3><ul className="feature-list">{product.features.map(f=><li key={f}><Check size={18}/>{f}</li>)}</ul><div className="buy-row"><QuantityControl value={qty} onChange={setQty} max={product.stock}/><button className="btn" onClick={()=>addToCart(product,qty)}><ShoppingCart/>Agregar al carrito</button><button className="btn secondary" onClick={buy}>Comprar ahora</button></div></div></div></section> }
